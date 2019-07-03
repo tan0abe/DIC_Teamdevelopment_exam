@@ -15,7 +15,14 @@ class TeamsController < ApplicationController
     @team = Team.new
   end
 
-  def edit; end
+  def edit
+    # if current_user == @team.owner
+    # else
+    #   redirect_to @team, notice: 'チームのオーナーではないので編集出来ません！'
+    # end
+
+    redirect_to @team, notice: 'チームのオーナーではないので編集出来ません！' unless current_user == @team.owner
+  end
 
   def create
     @team = Team.new(team_params)
@@ -30,11 +37,15 @@ class TeamsController < ApplicationController
   end
 
   def update
-    if @team.update(team_params)
-      redirect_to @team, notice: 'チーム更新に成功しました！'
+    if current_user == @team.owner
+      if @team.update(team_params)
+        redirect_to @team, notice: 'チーム更新に成功しました！'
+      else
+        flash.now[:error] = '保存に失敗しました、、'
+        render :edit
+      end
     else
-      flash.now[:error] = '保存に失敗しました、、'
-      render :edit
+      redirect_to @team, notice: 'チームのオーナーではないので編集出来ません！'
     end
   end
 
