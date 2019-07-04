@@ -44,6 +44,13 @@
                       <% if current_user == @team.owner || current_user == assign.user %>
                       <td><%= link_to '削除', team_assign_path(@team, assign), method: :delete, class: 'btn btn-sm btn-danger' %></td>
                       <% end %>
+
+                      <% if assign.team.owner_id == current_user.id %>
+                        <%= form_with model: @team, url: change_owner_path, method: :post, local: true do |form| %>
+                        <%= form.hidden_field :user_id, value: assign.user.id %>
+                        <td><button type="submit", class="btn btn-sm btn-danger">権限移動</button></td>
+                        <% end %>
+                      <% end %>
                     </tr>
                   <% end %>
                 </tbody>
