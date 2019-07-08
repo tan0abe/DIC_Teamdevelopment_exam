@@ -60,7 +60,7 @@ class TeamsController < ApplicationController
 
   def change_owner
     if @team.update(owner_id: params[:team][:user_id])
-      ChangeOwnerMailer.change_owner_mail(@team).deliver
+      ChangeOwnerMailer.change_owner_mail(@team.name, current_user.email,@team.owner.email).deliver
       redirect_to team_url(@team), notice: 'チームのオーナーを変更しました'
     else
       redirect_to team_url(@team), notice: 'チームのオーナーの変更が失敗しました'
